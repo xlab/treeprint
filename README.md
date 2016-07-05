@@ -1,4 +1,4 @@
-treeprint ![test coverage](https://img.shields.io/badge/coverage-85.1%25-green.svg)
+treeprint [![GoDoc](https://godoc.org/github.com/xlab/treeprint?status.svg)](https://godoc.org/github.com/xlab/treeprint) ![test coverage](https://img.shields.io/badge/coverage-85.1%25-green.svg)
 =========
 
 Package `treeprint` provides a simple ASCII tree composing tool.
