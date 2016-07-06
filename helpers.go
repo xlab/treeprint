@@ -33,3 +33,15 @@ func tagSpec(tag string) (name string, omit bool) {
 	}
 	return parts[0], false
 }
+
+func filterTags(tag reflect.StructTag) string {
+	tags := strings.Split(string(tag), " ")
+	filtered := make([]string, 0, len(tags))
+	for i := range tags {
+		if strings.HasPrefix(tags[i], "tree:") {
+			continue
+		}
+		filtered = append(filtered, tags[i])
+	}
+	return strings.Join(filtered, " ")
+}
