@@ -17,15 +17,6 @@ const (
 	StructFormattedTree
 )
 
-func Repr(v interface{}) string {
-	tree := New()
-	err := valueTree(tree, v)
-	if err != nil {
-		return err.Error()
-	}
-	return tree.String()
-}
-
 func FromStruct(v interface{}, opt ...StructTreeOption) (Tree, error) {
 	var treeOpt StructTreeOption
 	if len(opt) > 0 {
@@ -56,6 +47,21 @@ func FromStruct(v interface{}, opt ...StructTreeOption) (Tree, error) {
 		err := fmt.Errorf("treeprint: invalid StructTreeOption %v", treeOpt)
 		return nil, err
 	}
+}
+
+func Repr(v interface{}) string {
+	tree := New()
+	vType := reflect.TypeOf(v)
+	vValue := reflect.ValueOf(v)
+	_, val, isStruct := getValue(vType, &vValue)
+	if !isStruct {
+		return fmt.Sprintf("%+v", val.Interface())
+	}
+	err := valueTree(tree, val.Interface())
+	if err != nil {
+		return err.Error()
+	}
+	return tree.String()
 }
 
 func nameTree(tree Tree, v interface{}) error {
