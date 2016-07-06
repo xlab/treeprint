@@ -3,7 +3,7 @@ treeprint [![GoDoc](https://godoc.org/github.com/xlab/treeprint?status.svg)](htt
 
 Package `treeprint` provides a simple ASCII tree composing tool.
 
-<a href="https://upload.wikimedia.org/wikipedia/commons/5/58/ENC_SYSTEME_FIGURE.jpeg"><img alt="SYSTEME FIGURE" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/ENC_SYSTEME_FIGURE.jpeg/896px-ENC_SYSTEME_FIGURE.jpeg" align="left" width="200"></a>
+<a href="https://upload.wikimedia.org/wikipedia/commons/5/58/ENC_SYSTEME_FIGURE.jpeg"><img alt="SYSTEME FIGURE" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/ENC_SYSTEME_FIGURE.jpeg/896px-ENC_SYSTEME_FIGURE.jpeg" align="left" width="300"></a>
 
 If you are familiar with the [tree](http://mama.indstate.edu/users/ice/tree/) utility that is a recursive directory listing command that produces a depth indented listing of files, then you have the idea of what it would look like.
 
