@@ -5,47 +5,63 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"reflect"
 )
 
 type Value interface{}
 type MetaValue interface{}
 
+// Tree represents a tree structure with leaf-nodes and branch-nodes.
 type Tree interface {
+	// AddNode adds a new node to a branch.
 	AddNode(v Value) Tree
+	// AddMetaNode adds a new node with meta value provided to a branch.
 	AddMetaNode(meta MetaValue, v Value) Tree
+	// AddBranch adds a new branch node (a level deeper).
 	AddBranch(v Value) Tree
+	// AddMetaBranch adds a new branch node (a level deeper) with meta value provided.
 	AddMetaBranch(meta MetaValue, v Value) Tree
-
+	// Branch converts a leaf-node to a branch-node,
+	// applying this on a branch-node does no effect.
+	Branch() Tree
+	// FindByMeta finds a node whose meta value matches the provided one by reflect.DeepEqual,
+	// returns nil if not found.
+	FindByMeta(meta MetaValue) Tree
+	// FindByValue finds a node whose value matches the provided one by reflect.DeepEqual,
+	// returns nil if not found.
+	FindByValue(value Value) Tree
+	// String renders the tree or subtree as a string.
 	String() string
+	// Bytes renders the tree or subtree as byteslice.
 	Bytes() []byte
 }
 
 type node struct {
-	Branch *node
-	Meta   MetaValue
-	Value  Value
-	Nodes  []*node
+	Root  *node
+	Meta  MetaValue
+	Value Value
+	Nodes []*node
 }
 
 func (n *node) AddNode(v Value) Tree {
 	n.Nodes = append(n.Nodes, &node{
-		Branch: n,
-		Value:  v,
+		Root:  n,
+		Value: v,
 	})
-	if n.Branch != nil {
-		return n.Branch
+	if n.Root != nil {
+		return n.Root
 	}
 	return n
 }
 
 func (n *node) AddMetaNode(meta MetaValue, v Value) Tree {
 	n.Nodes = append(n.Nodes, &node{
-		Branch: n,
-		Meta:   meta,
-		Value:  v,
+		Root:  n,
+		Meta:  meta,
+		Value: v,
 	})
-	if n.Branch != nil {
-		return n.Branch
+	if n.Root != nil {
+		return n.Root
 	}
 	return n
 }
@@ -67,11 +83,40 @@ func (n *node) AddMetaBranch(meta MetaValue, v Value) Tree {
 	return branch
 }
 
+func (n *node) Branch() Tree {
+	n.Root = nil
+	return n
+}
+
+func (n *node) FindByMeta(meta MetaValue) Tree {
+	for _, node := range n.Nodes {
+		if reflect.DeepEqual(node.Meta, meta) {
+			return node
+		}
+		if v := node.FindByMeta(meta); v != nil {
+			return v
+		}
+	}
+	return nil
+}
+
+func (n *node) FindByValue(value Value) Tree {
+	for _, node := range n.Nodes {
+		if reflect.DeepEqual(node.Value, value) {
+			return node
+		}
+		if v := node.FindByMeta(value); v != nil {
+			return v
+		}
+	}
+	return nil
+}
+
 func (n *node) Bytes() []byte {
 	buf := new(bytes.Buffer)
 	level := 0
 	levelEnded := make(map[int]bool)
-	if n.Branch == nil {
+	if n.Root == nil {
 		buf.WriteString(string(EdgeTypeStart))
 		buf.WriteByte('\n')
 	} else {
@@ -109,7 +154,7 @@ func printNodes(wr io.Writer,
 }
 
 func printValues(wr io.Writer,
-	level int, levelEnded map[int]bool, edge EdgeType, meta MetaValue, v Value) {
+	level int, levelEnded map[int]bool, edge EdgeType, meta MetaValue, val Value) {
 
 	for i := 0; i < level; i++ {
 		if levelEnded[i] {
@@ -119,10 +164,10 @@ func printValues(wr io.Writer,
 		fmt.Fprintf(wr, "%s   ", EdgeTypeLink)
 	}
 	if meta != nil {
-		fmt.Fprintf(wr, "%s [%v]  %v\n", edge, meta, v)
+		fmt.Fprintf(wr, "%s [%v]  %v\n", edge, meta, val)
 		return
 	}
-	fmt.Fprintf(wr, "%s %v\n", edge, v)
+	fmt.Fprintf(wr, "%s %v\n", edge, val)
 }
 
 type EdgeType string

@@ -18,6 +18,20 @@ func TestOneNode(t *testing.T) {
 	assert.Equal(expected, actual)
 }
 
+func TestMetaNode(t *testing.T) {
+	assert := assert.New(t)
+
+	tree := New()
+	tree.AddMetaNode(123, "hello")
+	tree.AddMetaNode([]struct{}{}, "world")
+	actual := tree.String()
+	expected := `.
+├── [123]  hello
+└── [[]]  world
+`
+	assert.Equal(expected, actual)
+}
+
 func TestTwoNodes(t *testing.T) {
 	assert := assert.New(t)
 
