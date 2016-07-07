@@ -85,8 +85,8 @@ func nameTree(tree Tree, v interface{}) error {
 	for i := 0; i < fields; i++ {
 		field := typ.Field(i)
 		fieldValue := val.Field(i)
-		name, omit := getMeta(field.Name, field.Tag)
-		if omit && isEmpty(&fieldValue) {
+		name, skip, omit := getMeta(field.Name, field.Tag)
+		if skip || omit && isEmpty(&fieldValue) {
 			continue
 		}
 		typ, val, isStruct := getValue(field.Type, &fieldValue)
@@ -106,9 +106,12 @@ func nameTree(tree Tree, v interface{}) error {
 	return nil
 }
 
-func getMeta(fieldName string, tag reflect.StructTag) (name string, omit bool) {
+func getMeta(fieldName string, tag reflect.StructTag) (name string, skip, omit bool) {
 	if tagStr := tag.Get("tree"); len(tagStr) > 0 {
 		name, omit = tagSpec(tagStr)
+	}
+	if name == "-" {
+		return fieldName, true, omit
 	}
 	if len(name) == 0 {
 		name = fieldName
@@ -127,8 +130,8 @@ func valueTree(tree Tree, v interface{}) error {
 	for i := 0; i < fields; i++ {
 		field := typ.Field(i)
 		fieldValue := val.Field(i)
-		name, omit := getMeta(field.Name, field.Tag)
-		if omit && isEmpty(&fieldValue) {
+		name, skip, omit := getMeta(field.Name, field.Tag)
+		if skip || omit && isEmpty(&fieldValue) {
 			continue
 		}
 		typ, val, isStruct := getValue(field.Type, &fieldValue)
@@ -157,8 +160,8 @@ func tagTree(tree Tree, v interface{}) error {
 	for i := 0; i < fields; i++ {
 		field := typ.Field(i)
 		fieldValue := val.Field(i)
-		name, omit := getMeta(field.Name, field.Tag)
-		if omit && isEmpty(&fieldValue) {
+		name, skip, omit := getMeta(field.Name, field.Tag)
+		if skip || omit && isEmpty(&fieldValue) {
 			continue
 		}
 		filteredTag := filterTags(field.Tag)
@@ -188,8 +191,8 @@ func typeTree(tree Tree, v interface{}) error {
 	for i := 0; i < fields; i++ {
 		field := typ.Field(i)
 		fieldValue := val.Field(i)
-		name, omit := getMeta(field.Name, field.Tag)
-		if omit && isEmpty(&fieldValue) {
+		name, skip, omit := getMeta(field.Name, field.Tag)
+		if skip || omit && isEmpty(&fieldValue) {
 			continue
 		}
 		typ, val, isStruct := getValue(field.Type, &fieldValue)
@@ -219,8 +222,8 @@ func typeSizeTree(tree Tree, v interface{}) error {
 	for i := 0; i < fields; i++ {
 		field := typ.Field(i)
 		fieldValue := val.Field(i)
-		name, omit := getMeta(field.Name, field.Tag)
-		if omit && isEmpty(&fieldValue) {
+		name, skip, omit := getMeta(field.Name, field.Tag)
+		if skip || omit && isEmpty(&fieldValue) {
 			continue
 		}
 		typ, val, isStruct := getValue(field.Type, &fieldValue)
@@ -250,8 +253,8 @@ func metaTree(tree Tree, v interface{}, fmtFunc FmtFunc) error {
 	for i := 0; i < fields; i++ {
 		field := typ.Field(i)
 		fieldValue := val.Field(i)
-		name, omit := getMeta(field.Name, field.Tag)
-		if omit && isEmpty(&fieldValue) {
+		name, skip, omit := getMeta(field.Name, field.Tag)
+		if skip || omit && isEmpty(&fieldValue) {
 			continue
 		}
 		typ, val, isStruct := getValue(field.Type, &fieldValue)
