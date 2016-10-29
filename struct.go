@@ -90,6 +90,9 @@ func nameTree(tree Tree, v interface{}) error {
 			continue
 		}
 		typ, val, isStruct := getValue(field.Type, &fieldValue)
+		if !val.CanSet() {
+			continue
+		}
 		if !isStruct {
 			tree.AddNode(name)
 			continue
@@ -135,6 +138,9 @@ func valueTree(tree Tree, v interface{}) error {
 			continue
 		}
 		typ, val, isStruct := getValue(field.Type, &fieldValue)
+		if !val.CanSet() {
+			continue
+		}
 		if !isStruct {
 			tree.AddMetaNode(val.Interface(), name)
 			continue
@@ -166,6 +172,9 @@ func tagTree(tree Tree, v interface{}) error {
 		}
 		filteredTag := filterTags(field.Tag)
 		typ, val, isStruct := getValue(field.Type, &fieldValue)
+		if !val.CanSet() {
+			continue
+		}
 		if !isStruct {
 			tree.AddMetaNode(filteredTag, name)
 			continue
@@ -196,6 +205,9 @@ func typeTree(tree Tree, v interface{}) error {
 			continue
 		}
 		typ, val, isStruct := getValue(field.Type, &fieldValue)
+		if !val.CanSet() {
+			continue
+		}
 		typename := fmt.Sprintf("%T", val.Interface())
 		if !isStruct {
 			tree.AddMetaNode(typename, name)
@@ -227,6 +239,9 @@ func typeSizeTree(tree Tree, v interface{}) error {
 			continue
 		}
 		typ, val, isStruct := getValue(field.Type, &fieldValue)
+		if !val.CanSet() {
+			continue
+		}
 		typesize := typ.Size()
 		if !isStruct {
 			tree.AddMetaNode(typesize, name)
@@ -258,6 +273,9 @@ func metaTree(tree Tree, v interface{}, fmtFunc FmtFunc) error {
 			continue
 		}
 		typ, val, isStruct := getValue(field.Type, &fieldValue)
+		if !val.CanSet() {
+			continue
+		}
 		formatted, show := fmtFunc(name, val.Interface())
 		if !isStruct {
 			if show {
