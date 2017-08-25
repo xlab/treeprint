@@ -121,3 +121,26 @@ func TestComplex(t *testing.T) {
 `
 	assert.Equal(expected, actual)
 }
+
+func TestIndirectOrder(t *testing.T) {
+	assert := assert.New(t)
+
+	tree := New()
+	tree.AddBranch("one").AddNode("two")
+	foo := tree.AddBranch("foo")
+	foo.AddBranch("bar").AddNode("a").AddNode("b").AddNode("c")
+	foo.AddNode("end")
+
+	actual := tree.String()
+	expected := `.
+├── one
+│   └── two
+└── foo
+    ├── bar
+    │   ├── a
+    │   ├── b
+    │   └── c
+    └── end
+`
+	assert.Equal(expected, actual)
+}
