@@ -37,7 +37,7 @@ create a new level with two distinct nodes on it. So `tree.AddNode().AddNode()` 
 `tree.AddBranch().AddBranch().AddBranch()` is a high thing. Use `String()` or `Bytes()` on a branch
 to render a subtree, or use it on the root to print the whole tree.
 
-The utility will yiled Unicode-frinedly trees. The output is predictable and there is no platform-dependent exceptions, so if you have issues with displaying the tree in the console, all platform-related transformations can be done after the tree has been rendered: [an example](https://github.com/xlab/treeprint/issues/2#issuecomment-324944141) for Asian locales.
+The utility will yield Unicode-friendly trees. The output is predictable and there is no platform-dependent exceptions, so if you have issues with displaying the tree in the console, all platform-related transformations can be done after the tree has been rendered: [an example](https://github.com/xlab/treeprint/issues/2#issuecomment-324944141) for Asian locales.
 
 ## Use cases
 
