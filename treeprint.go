@@ -30,6 +30,8 @@ type Tree interface {
 	// FindByValue finds a node whose value matches the provided one by reflect.DeepEqual,
 	// returns nil if not found.
 	FindByValue(value Value) Tree
+	//  returns the last node of a tree
+	FindLastNode() Tree
 	// String renders the tree or subtree as a string.
 	String() string
 	// Bytes renders the tree or subtree as byteslice.
@@ -41,6 +43,12 @@ type node struct {
 	Meta  MetaValue
 	Value Value
 	Nodes []*node
+}
+
+func (n *node) FindLastNode() Tree {
+	ns := n.Nodes
+	n = ns[len(ns)-1]
+	return n
 }
 
 func (n *node) AddNode(v Value) Tree {
