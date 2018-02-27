@@ -181,7 +181,7 @@ func isEnded(levelsEnded []int, level int) bool {
 
 type EdgeType string
 
-const (
+var (
 	EdgeTypeStart EdgeType = "."
 	EdgeTypeLink  EdgeType = "│"
 	EdgeTypeMid   EdgeType = "├──"
