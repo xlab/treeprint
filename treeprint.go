@@ -36,6 +36,8 @@ type Tree interface {
 	String() string
 	// Bytes renders the tree or subtree as byteslice.
 	Bytes() []byte
+
+	SetValue(value Value)
 }
 
 type node struct {
@@ -125,7 +127,7 @@ func (n *node) Bytes() []byte {
 	level := 0
 	var levelsEnded []int
 	if n.Root == nil {
-		buf.WriteString(string(EdgeTypeStart))
+		buf.WriteString(fmt.Sprintf("%v",n.Value))
 		buf.WriteByte('\n')
 	} else {
 		edge := EdgeTypeMid
@@ -143,6 +145,10 @@ func (n *node) Bytes() []byte {
 
 func (n *node) String() string {
 	return string(n.Bytes())
+}
+
+func (n *node) SetValue(value Value){
+	n.Value = value
 }
 
 func printNodes(wr io.Writer,
@@ -190,12 +196,11 @@ func isEnded(levelsEnded []int, level int) bool {
 type EdgeType string
 
 var (
-	EdgeTypeStart EdgeType = "."
 	EdgeTypeLink  EdgeType = "│"
 	EdgeTypeMid   EdgeType = "├──"
 	EdgeTypeEnd   EdgeType = "└──"
 )
 
 func New() Tree {
-	return &node{}
+	return &node{Value: "."}
 }
