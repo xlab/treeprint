@@ -55,8 +55,8 @@ func TestLevel(t *testing.T) {
 	actual := tree.String()
 	expected := `.
 ├── hello
-│   ├── my friend
-│   └── lol
+│   ├── my friend
+│   └── lol
 └── world
 `
 	assert.Equal(expected, actual)
@@ -72,8 +72,8 @@ func TestNamedRoot(t *testing.T) {
 	actual := tree.String()
 	expected := `friends
 ├── hello
-│   ├── my friend
-│   └── lol
+│   ├── my friend
+│   └── lol
 └── world
 `
 	assert.Equal(expected, actual)
@@ -95,15 +95,15 @@ func TestDeepLevel(t *testing.T) {
 	actual := tree.String()
 	expected := `.
 ├── one
-│   ├── subnode1
-│   ├── subnode2
-│   ├── two
-│   │   ├── subnode1
-│   │   ├── subnode2
-│   │   └── three
-│   │       ├── subnode1
-│   │       └── subnode2
-│   └── subnode3
+│   ├── subnode1
+│   ├── subnode2
+│   ├── two
+│   │   ├── subnode1
+│   │   ├── subnode2
+│   │   └── three
+│   │       ├── subnode1
+│   │       └── subnode2
+│   └── subnode3
 └── outernode
 `
 	assert.Equal(expected, actual)
@@ -128,12 +128,12 @@ func TestComplex(t *testing.T) {
 ├── Makefile
 ├── aws.sh
 ├── [ 204]  bin
-│   ├── dbmaker
-│   ├── someserver
-│   └── testtool
+│   ├── dbmaker
+│   ├── someserver
+│   └── testtool
 ├── [ 374]  deploy
-│   ├── Makefile
-│   └── bootstrap.sh
+│   ├── Makefile
+│   └── bootstrap.sh
 └── [122K]  testtool.a
 `
 	assert.Equal(expected, actual)
@@ -151,13 +151,49 @@ func TestIndirectOrder(t *testing.T) {
 	actual := tree.String()
 	expected := `.
 ├── one
-│   └── two
+│   └── two
 └── foo
     ├── bar
-    │   ├── a
-    │   ├── b
-    │   └── c
+    │   ├── a
+    │   ├── b
+    │   └── c
     └── end
+`
+	assert.Equal(expected, actual)
+}
+
+func TestEdgeTypeAndIndent(t *testing.T) {
+	assert := assert.New(t)
+
+	// Restore to the original values
+	defer func(link, mid, end EdgeType, indent int) {
+		EdgeTypeLink = link
+		EdgeTypeMid = mid
+		EdgeTypeEnd = end
+		IndentSize = indent
+	}(EdgeTypeLink, EdgeTypeMid, EdgeTypeEnd, IndentSize)
+
+	EdgeTypeLink = "|"
+	EdgeTypeMid = "+-"
+	EdgeTypeEnd = "+-"
+	IndentSize = 2
+
+	tree := New()
+	tree.AddBranch("one").AddNode("two")
+	foo := tree.AddBranch("foo")
+	foo.AddBranch("bar").AddNode("a").AddNode("b").AddNode("c")
+	foo.AddNode("end")
+
+	actual := tree.String()
+	expected := `.
++- one
+|  +- two
++- foo
+   +- bar
+   |  +- a
+   |  +- b
+   |  +- c
+   +- end
 `
 	assert.Equal(expected, actual)
 }

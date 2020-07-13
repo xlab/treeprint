@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"reflect"
+	"strings"
 )
 
 type Value interface{}
@@ -181,10 +182,10 @@ func printValues(wr io.Writer,
 
 	for i := 0; i < level; i++ {
 		if isEnded(levelsEnded, i) {
-			fmt.Fprint(wr, "    ")
+			fmt.Fprint(wr, strings.Repeat(" ", IndentSize + 1))
 			continue
 		}
-		fmt.Fprintf(wr, "%s   ", EdgeTypeLink)
+		fmt.Fprintf(wr, "%s%s", EdgeTypeLink, strings.Repeat(" ", IndentSize))
 	}
 	if meta != nil {
 		fmt.Fprintf(wr, "%s [%v]  %v\n", edge, meta, val)
@@ -209,6 +210,9 @@ var (
 	EdgeTypeMid   EdgeType = "├──"
 	EdgeTypeEnd   EdgeType = "└──"
 )
+
+// IndentSize is the number of spaces per tree level.
+var IndentSize = 3
 
 func New() Tree {
 	return &node{Value: "."}
