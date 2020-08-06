@@ -214,3 +214,51 @@ func TestRelationships(t *testing.T) {
 	assert.Equal(treeNode, treeNode.Nodes[0].Root)
 	assert.Equal(treeNode.Nodes[0], treeNode.Nodes[0].Nodes[0].Root)
 }
+
+func TestMultiline(t *testing.T) {
+	assert := assert.New(t)
+
+	multi1 := `I am
+a multiline
+value`
+
+	multi2 := `I have
+many
+
+
+empty lines`
+
+	multi3 := `I am another
+multiple
+lines value`
+
+	tree := New()
+	tree.AddBranch("one").AddMetaNode("meta", multi1)
+	tree.AddBranch("two")
+	foo := tree.AddBranch("foo")
+	foo.AddBranch("bar").AddNode("a").AddNode(multi2).AddNode("c")
+	foo.AddBranch(multi3)
+
+	actual := tree.String()
+	expected := `.
+├── one
+│   └── [meta]  I am
+│       a multiline
+│       value
+├── two
+└── foo
+    ├── bar
+    │   ├── a
+    │   ├── I have
+    │   │   many
+    │   │   
+    │   │   
+    │   │   empty lines
+    │   └── c
+    └── I am another
+        multiple
+        lines value
+`
+
+	assert.Equal(expected, actual)
+}
