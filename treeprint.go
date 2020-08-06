@@ -62,9 +62,6 @@ func (n *node) AddNode(v Value) Tree {
 		Root:  n,
 		Value: v,
 	})
-	if n.Root != nil {
-		return n.Root
-	}
 	return n
 }
 
@@ -74,14 +71,12 @@ func (n *node) AddMetaNode(meta MetaValue, v Value) Tree {
 		Meta:  meta,
 		Value: v,
 	})
-	if n.Root != nil {
-		return n.Root
-	}
 	return n
 }
 
 func (n *node) AddBranch(v Value) Tree {
 	branch := &node{
+		Root:  n,
 		Value: v,
 	}
 	n.Nodes = append(n.Nodes, branch)
@@ -90,6 +85,7 @@ func (n *node) AddBranch(v Value) Tree {
 
 func (n *node) AddMetaBranch(meta MetaValue, v Value) Tree {
 	branch := &node{
+		Root:  n,
 		Meta:  meta,
 		Value: v,
 	}
@@ -134,7 +130,7 @@ func (n *node) Bytes() []byte {
 		if n.Meta != nil {
 			buf.WriteString(fmt.Sprintf("[%v]  %v", n.Meta, n.Value))
 		} else {
-			buf.WriteString(fmt.Sprintf("%v",n.Value))
+			buf.WriteString(fmt.Sprintf("%v", n.Value))
 		}
 		buf.WriteByte('\n')
 	} else {
@@ -155,11 +151,11 @@ func (n *node) String() string {
 	return string(n.Bytes())
 }
 
-func (n *node) SetValue(value Value){
+func (n *node) SetValue(value Value) {
 	n.Value = value
 }
 
-func (n *node) SetMetaValue(meta MetaValue){
+func (n *node) SetMetaValue(meta MetaValue) {
 	n.Meta = meta
 }
 
@@ -184,7 +180,7 @@ func printValues(wr io.Writer,
 
 	for i := 0; i < level; i++ {
 		if isEnded(levelsEnded, i) {
-			fmt.Fprint(wr, strings.Repeat(" ", IndentSize + 1))
+			fmt.Fprint(wr, strings.Repeat(" ", IndentSize+1))
 			continue
 		}
 		fmt.Fprintf(wr, "%s%s", EdgeTypeLink, strings.Repeat(" ", IndentSize))
@@ -208,9 +204,9 @@ func isEnded(levelsEnded []int, level int) bool {
 type EdgeType string
 
 var (
-	EdgeTypeLink  EdgeType = "│"
-	EdgeTypeMid   EdgeType = "├──"
-	EdgeTypeEnd   EdgeType = "└──"
+	EdgeTypeLink EdgeType = "│"
+	EdgeTypeMid  EdgeType = "├──"
+	EdgeTypeEnd  EdgeType = "└──"
 )
 
 // IndentSize is the number of spaces per tree level.

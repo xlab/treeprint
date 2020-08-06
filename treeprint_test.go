@@ -197,3 +197,20 @@ func TestEdgeTypeAndIndent(t *testing.T) {
 `
 	assert.Equal(expected, actual)
 }
+
+func TestRelationships(t *testing.T) {
+	assert := assert.New(t)
+
+	tree := New()
+	tree.AddBranch("one").AddNode("two")
+	foo := tree.AddBranch("foo")
+	foo.AddBranch("bar").AddNode("a").AddNode("b").AddNode("c")
+	foo.AddNode("end")
+
+	treeNode := tree.(*node)
+
+	assert.Nil(treeNode.Root)
+	assert.Len(treeNode.Nodes, 2)
+	assert.Equal(treeNode, treeNode.Nodes[0].Root)
+	assert.Equal(treeNode.Nodes[0], treeNode.Nodes[0].Nodes[0].Root)
+}
