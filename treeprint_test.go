@@ -6,6 +6,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestZeroNodesWithRoot(t *testing.T) {
+	assert := assert.New(t)
+
+	tree := NewWithRoot("mytree")
+	actual := tree.String()
+	expected := "mytree\n"
+	assert.Equal(expected, actual)
+}
+
 func TestOneNode(t *testing.T) {
 	assert := assert.New(t)
 
@@ -13,6 +22,18 @@ func TestOneNode(t *testing.T) {
 	tree.AddNode("hello")
 	actual := tree.String()
 	expected := `.
+└── hello
+`
+	assert.Equal(expected, actual)
+}
+
+func TestOneNodeWithRoot(t *testing.T) {
+	assert := assert.New(t)
+
+	tree := NewWithRoot("mytree")
+	tree.AddNode("hello")
+	actual := tree.String()
+	expected := `mytree
 └── hello
 `
 	assert.Equal(expected, actual)

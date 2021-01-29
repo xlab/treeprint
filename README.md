@@ -45,6 +45,7 @@ When you want to render a complex data structure:
 
 ```go
 func main() {
+    // to add a custom root name use `treeprint.NewWithRoot()` instead
     tree := treeprint.New()
 
     // create a new branch in the root
@@ -90,6 +91,7 @@ Another case, when you have to make a tree where any leaf may have some meta-dat
 
 ```go
 func main {
+    // to add a custom root name use `treeprint.NewWithRoot()` instead
     tree := treeprint.New()
 
     tree.AddNode("Dockerfile")
