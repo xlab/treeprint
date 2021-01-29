@@ -9,8 +9,14 @@ import (
 	"strings"
 )
 
+// Value defines any value
 type Value interface{}
+
+// MetaValue defines any meta value
 type MetaValue interface{}
+
+// NodeVisitor function type for iterating over nodes
+type NodeVisitor func(item *node)
 
 // Tree represents a tree structure with leaf-nodes and branch-nodes.
 type Tree interface {
@@ -40,6 +46,11 @@ type Tree interface {
 
 	SetValue(value Value)
 	SetMetaValue(meta MetaValue)
+
+	// VisitAll iterates over the tree, branches and nodes.
+	// If need to iterate over the whole tree, use the root node.
+	// Note this method uses a breadth-first approach.
+	VisitAll(fn NodeVisitor)
 }
 
 type node struct {
@@ -157,6 +168,17 @@ func (n *node) SetValue(value Value) {
 
 func (n *node) SetMetaValue(meta MetaValue) {
 	n.Meta = meta
+}
+
+func (n *node) VisitAll(fn NodeVisitor) {
+	for _, node := range n.Nodes {
+		fn(node)
+
+		if len(node.Nodes) > 0 {
+			node.VisitAll(fn)
+			continue
+		}
+	}
 }
 
 func printNodes(wr io.Writer,
