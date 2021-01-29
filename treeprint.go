@@ -261,6 +261,12 @@ var (
 // IndentSize is the number of spaces per tree level.
 var IndentSize = 3
 
+// New Generates new tree
 func New() Tree {
 	return &node{Value: "."}
+}
+
+// NewWithRoot Generates new tree with the given root value
+func NewWithRoot(root Value) Tree {
+	return &node{Value: root}
 }
