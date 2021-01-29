@@ -283,3 +283,35 @@ lines value`
 
 	assert.Equal(expected, actual)
 }
+
+func TestVisitAll(t *testing.T) {
+
+	tree := New()
+	one := tree.AddBranch("one")
+	one.AddNode("one-subnode1").AddNode("one-subnode2")
+	one.AddBranch("two").AddNode("two-subnode1").AddNode("two-subnode2").
+		AddBranch("three").AddNode("three-subnode1").AddNode("three-subnode2")
+	tree.AddNode("outernode")
+
+	var visitedNodeValues []Value
+	expectedNodeValues := []Value{
+		"one",
+		"one-subnode1",
+		"one-subnode2",
+		"two",
+		"two-subnode1",
+		"two-subnode2",
+		"three",
+		"three-subnode1",
+		"three-subnode2",
+		"outernode",
+	}
+
+	tree.VisitAll(func(item *node) {
+		visitedNodeValues = append(visitedNodeValues, item.Value)
+	})
+
+	assert := assert.New(t)
+	assert.Equal(expectedNodeValues, visitedNodeValues)
+
+}
