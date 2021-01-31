@@ -124,7 +124,7 @@ Output:
 └── [122K]  testtool.a
 ```
 
-### Iterating over the three nodes
+### Iterating over the tree nodes
 
 ```go
 tree := New()
