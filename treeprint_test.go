@@ -228,7 +228,7 @@ func TestRelationships(t *testing.T) {
 	foo.AddBranch("bar").AddNode("a").AddNode("b").AddNode("c")
 	foo.AddNode("end")
 
-	treeNode := tree.(*node)
+	treeNode := tree.(*Node)
 
 	assert.Nil(treeNode.Root)
 	assert.Len(treeNode.Nodes, 2)
@@ -307,7 +307,7 @@ func TestVisitAll(t *testing.T) {
 		"outernode",
 	}
 
-	tree.VisitAll(func(item *node) {
+	tree.VisitAll(func(item *Node) {
 		visitedNodeValues = append(visitedNodeValues, item.Value)
 	})
 
