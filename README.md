@@ -39,6 +39,8 @@ to render a subtree, or use it on the root to print the whole tree.
 
 The utility will yield Unicode-friendly trees. The output is predictable and there is no platform-dependent exceptions, so if you have issues with displaying the tree in the console, all platform-related transformations can be done after the tree has been rendered: [an example](https://github.com/xlab/treeprint/issues/2#issuecomment-324944141) for Asian locales.
 
+See also [this fork](https://github.com/apstndb/treeprint) that introduces options to set custom node symbols before yielding the tree.
+
 ## Use cases
 
 ### When you want to render a complex data structure:
